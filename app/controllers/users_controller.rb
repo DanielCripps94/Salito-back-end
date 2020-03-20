@@ -18,8 +18,8 @@ class UsersController < ApplicationController
         end
     end
 
-    def create
-        user = User.new(name: params[:name],email:params[:email],password:params[:password])
+    def sign_up
+        user = User.create(name: params[:name],email:params[:email],password:params[:password])
         if user.save
             render json: {user: user, token: generate_token({id: user.id }) }
         else
@@ -29,6 +29,12 @@ class UsersController < ApplicationController
 
     def generate_token(data)
         JWT.encode(data, "my secret")
+    end
+
+     private
+
+    def users_params
+        params.require(:user).permit(:name, :email, :password)
     end
 
 end
